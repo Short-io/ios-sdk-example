@@ -1,0 +1,583 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FBA84EDA2E01799B000DD359 /* ShortIOSDK in Frameworks */ = {isa = PBXBuildFile; productRef = FBA84ED92E01799B000DD359 /* ShortIOSDK */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FBA84EBC2E0178E0000DD359 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FBA84EA62E0178DE000DD359 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FBA84EAD2E0178DE000DD359;
+			remoteInfo = ShortIOApp;
+		};
+		FBA84EC62E0178E0000DD359 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FBA84EA62E0178DE000DD359 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FBA84EAD2E0178DE000DD359;
+			remoteInfo = ShortIOApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FBA84EAE2E0178DE000DD359 /* ShortIOApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShortIOApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBA84EBB2E0178E0000DD359 /* ShortIOAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortIOAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBA84EC52E0178E0000DD359 /* ShortIOAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortIOAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FBA84EB02E0178DE000DD359 /* ShortIOApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ShortIOApp;
+			sourceTree = "<group>";
+		};
+		FBA84EBE2E0178E0000DD359 /* ShortIOAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ShortIOAppTests;
+			sourceTree = "<group>";
+		};
+		FBA84EC82E0178E0000DD359 /* ShortIOAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ShortIOAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FBA84EAB2E0178DE000DD359 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBA84EDA2E01799B000DD359 /* ShortIOSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EB82E0178E0000DD359 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EC22E0178E0000DD359 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FBA84EA52E0178DE000DD359 = {
+			isa = PBXGroup;
+			children = (
+				FBA84EB02E0178DE000DD359 /* ShortIOApp */,
+				FBA84EBE2E0178E0000DD359 /* ShortIOAppTests */,
+				FBA84EC82E0178E0000DD359 /* ShortIOAppUITests */,
+				FBA84EAF2E0178DE000DD359 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FBA84EAF2E0178DE000DD359 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FBA84EAE2E0178DE000DD359 /* ShortIOApp.app */,
+				FBA84EBB2E0178E0000DD359 /* ShortIOAppTests.xctest */,
+				FBA84EC52E0178E0000DD359 /* ShortIOAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FBA84EAD2E0178DE000DD359 /* ShortIOApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBA84ECF2E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOApp" */;
+			buildPhases = (
+				FBA84EAA2E0178DE000DD359 /* Sources */,
+				FBA84EAB2E0178DE000DD359 /* Frameworks */,
+				FBA84EAC2E0178DE000DD359 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FBA84EB02E0178DE000DD359 /* ShortIOApp */,
+			);
+			name = ShortIOApp;
+			packageProductDependencies = (
+				FBA84ED92E01799B000DD359 /* ShortIOSDK */,
+			);
+			productName = ShortIOApp;
+			productReference = FBA84EAE2E0178DE000DD359 /* ShortIOApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FBA84EBA2E0178E0000DD359 /* ShortIOAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBA84ED22E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOAppTests" */;
+			buildPhases = (
+				FBA84EB72E0178E0000DD359 /* Sources */,
+				FBA84EB82E0178E0000DD359 /* Frameworks */,
+				FBA84EB92E0178E0000DD359 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FBA84EBD2E0178E0000DD359 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FBA84EBE2E0178E0000DD359 /* ShortIOAppTests */,
+			);
+			name = ShortIOAppTests;
+			packageProductDependencies = (
+			);
+			productName = ShortIOAppTests;
+			productReference = FBA84EBB2E0178E0000DD359 /* ShortIOAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FBA84EC42E0178E0000DD359 /* ShortIOAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBA84ED52E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOAppUITests" */;
+			buildPhases = (
+				FBA84EC12E0178E0000DD359 /* Sources */,
+				FBA84EC22E0178E0000DD359 /* Frameworks */,
+				FBA84EC32E0178E0000DD359 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FBA84EC72E0178E0000DD359 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FBA84EC82E0178E0000DD359 /* ShortIOAppUITests */,
+			);
+			name = ShortIOAppUITests;
+			packageProductDependencies = (
+			);
+			productName = ShortIOAppUITests;
+			productReference = FBA84EC52E0178E0000DD359 /* ShortIOAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FBA84EA62E0178DE000DD359 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					FBA84EAD2E0178DE000DD359 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					FBA84EBA2E0178E0000DD359 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = FBA84EAD2E0178DE000DD359;
+					};
+					FBA84EC42E0178E0000DD359 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = FBA84EAD2E0178DE000DD359;
+					};
+				};
+			};
+			buildConfigurationList = FBA84EA92E0178DE000DD359 /* Build configuration list for PBXProject "ShortIOApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FBA84EA52E0178DE000DD359;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FBA84ED82E01799B000DD359 /* XCRemoteSwiftPackageReference "ios-sdk" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FBA84EAF2E0178DE000DD359 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FBA84EAD2E0178DE000DD359 /* ShortIOApp */,
+				FBA84EBA2E0178E0000DD359 /* ShortIOAppTests */,
+				FBA84EC42E0178E0000DD359 /* ShortIOAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FBA84EAC2E0178DE000DD359 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EB92E0178E0000DD359 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EC32E0178E0000DD359 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FBA84EAA2E0178DE000DD359 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EB72E0178E0000DD359 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBA84EC12E0178E0000DD359 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FBA84EBD2E0178E0000DD359 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FBA84EAD2E0178DE000DD359 /* ShortIOApp */;
+			targetProxy = FBA84EBC2E0178E0000DD359 /* PBXContainerItemProxy */;
+		};
+		FBA84EC72E0178E0000DD359 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FBA84EAD2E0178DE000DD359 /* ShortIOApp */;
+			targetProxy = FBA84EC62E0178E0000DD359 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FBA84ECD2E0178E0000DD359 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FBA84ECE2E0178E0000DD359 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FBA84ED02E0178E0000DD359 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FBA84ED12E0178E0000DD359 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FBA84ED32E0178E0000DD359 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShortIOApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShortIOApp";
+			};
+			name = Debug;
+		};
+		FBA84ED42E0178E0000DD359 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShortIOApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShortIOApp";
+			};
+			name = Release;
+		};
+		FBA84ED62E0178E0000DD359 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ShortIOApp;
+			};
+			name = Debug;
+		};
+		FBA84ED72E0178E0000DD359 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.-.ShortIOAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ShortIOApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FBA84EA92E0178DE000DD359 /* Build configuration list for PBXProject "ShortIOApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBA84ECD2E0178E0000DD359 /* Debug */,
+				FBA84ECE2E0178E0000DD359 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBA84ECF2E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBA84ED02E0178E0000DD359 /* Debug */,
+				FBA84ED12E0178E0000DD359 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBA84ED22E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBA84ED32E0178E0000DD359 /* Debug */,
+				FBA84ED42E0178E0000DD359 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBA84ED52E0178E0000DD359 /* Build configuration list for PBXNativeTarget "ShortIOAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBA84ED62E0178E0000DD359 /* Debug */,
+				FBA84ED72E0178E0000DD359 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FBA84ED82E01799B000DD359 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Short-io/ios-sdk/";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBA84ED92E01799B000DD359 /* ShortIOSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA84ED82E01799B000DD359 /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = ShortIOSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FBA84EA62E0178DE000DD359 /* Project object */;
+}
