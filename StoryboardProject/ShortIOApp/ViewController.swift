@@ -133,7 +133,7 @@ class ViewController: UIViewController {
 
         let apiKey = "your_api_key"
 
-        Task {
+        Task { @MainActor in
             do {
                 let result = try await shortLinkSDK.createShortLink(parameters: parameters, apiKey: apiKey)
                 switch result {
