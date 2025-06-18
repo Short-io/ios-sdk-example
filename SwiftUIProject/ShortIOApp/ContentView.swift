@@ -69,7 +69,7 @@ struct ContentView: View {
         )
         let apiKey = "your_api_key"
         
-        Task {
+        Task { @MainActor in
             do {
                 let result = try await shortLinkSDK.createShortLink(
                     parameters: parameters,

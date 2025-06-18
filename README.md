@@ -60,7 +60,7 @@ In the same file (`ContentView.swift` or `ViewController.swift`), provide your *
 ```swift
 let parameters = ShortIOParameters(
     domain: "your_domain", // e.g., example.short.gy
-    originalURL: "https://{your_domain}" // // The destination URL
+    originalURL: "https://{your_domain}" // The destination URL
 
 )
 ```

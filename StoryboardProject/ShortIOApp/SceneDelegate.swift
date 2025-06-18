@@ -4,7 +4,7 @@ import ShortIOSDK
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    var sdk = ShortIOSDK()
+    private let = ShortIOSDK()
     
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
