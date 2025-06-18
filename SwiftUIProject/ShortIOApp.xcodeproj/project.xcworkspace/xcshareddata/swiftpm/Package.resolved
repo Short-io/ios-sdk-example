@@ -1,0 +1,15 @@
+{
+  "originHash" : "aae27b9dae8282677b404d6e17ac712d6ae62e1c91cda9b372c8c31f847a87de",
+  "pins" : [
+    {
+      "identity" : "ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Short-io/ios-sdk/",
+      "state" : {
+        "branch" : "main",
+        "revision" : "46ae8e395a085365d2b62320b41c917146445e5d"
+      }
+    }
+  ],
+  "version" : 3
+}
