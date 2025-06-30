@@ -122,6 +122,7 @@ struct ContentView: View {
         Task {
             do {
                 let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
+                secureShortURL = result.securedShortUrl
                 print("result", result.securedOriginalURL, result.securedShortUrl)
             } catch {
                 print("Failed to create secure URL: \(error)")
