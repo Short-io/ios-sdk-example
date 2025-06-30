@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var shortURL: String?
     @State private var errorMessage: String?
     @State private var isLoading: Bool = false
+    @State private var secureShortURL: String?
     private let shortLinkSDK = ShortIOSDK()
     
     var body: some View {
@@ -31,6 +32,17 @@ struct ContentView: View {
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)
+
+                Button(action: createEncryptedLink) {
+                    Text("Create Encrypted Short Link")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
             }
             
             if let shortURL = shortURL {
@@ -41,6 +53,21 @@ struct ContentView: View {
                     .contextMenu {
                         Button(action: {
                             UIPasteboard.general.string = shortURL
+                        }) {
+                            Text("Copy to Clipboard")
+                            Image(systemName: "doc.on.doc")
+                        }
+                    }
+            }
+            
+            if let secureShortURL = secureShortURL {
+                Text("Secure Short URL: \(secureShortURL)")
+                    .font(.subheadline)
+                    .foregroundColor(.green)
+                    .padding()
+                    .contextMenu {
+                        Button(action: {
+                            UIPasteboard.general.string = secureShortURL
                         }) {
                             Text("Copy to Clipboard")
                             Image(systemName: "doc.on.doc")
@@ -88,6 +115,17 @@ struct ContentView: View {
                 print("Error: \(error.localizedDescription)")
             }
             isLoading = false
+        }
+    }
+    
+    private func createEncryptedLink() {
+        Task {
+            do {
+                let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
+                print("result", result.securedOriginalURL, result.securedShortUrl)
+            } catch {
+                print("Failed to create secure URL: \(error)")
+            }
         }
     }
 }

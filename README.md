@@ -98,6 +98,28 @@ Task {
 }
 ```
 
+### 🔐 Secure Short Links (Encrypted)
+
+If you want to encrypt the original URL, the SDK provides a `createSecure` function that uses AES-GCM encryption.
+
+#### 🔧 Example
+
+```swift
+Task {
+    do {
+        let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
+        print("result", result.securedOriginalURL, result.securedShortUrl)
+    } catch {
+        print("Failed to create secure URL: \(error)")
+    }
+}
+```
+#### 🧾 Output Format
+
+- **`securedOriginalURL:`** An encrypted URL like `shortsecure://<Base64EncodedData>?<Base64IV>`
+
+- **`securedShortUrl:`** A Base64-encoded decryption key to be appended as a fragment (e.g. `#<key>`)
+
 ## 🌐 Handling Universal Links
 
 ### SwiftUI Implementation
