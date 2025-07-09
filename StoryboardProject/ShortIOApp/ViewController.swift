@@ -35,6 +35,17 @@ class ViewController: UIViewController {
         return button
     }()
 
+    private let conversionTracking: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Conversion Tracking", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(trackingConversion), for: .touchUpInside)
+        return button
+    }()
+
     private let shortLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let secureLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
 
@@ -146,7 +157,9 @@ class ViewController: UIViewController {
             secureLinkLoaderStack,
             resultSecureShortLinkLabel,
             copySecureShortLinkButton,
-            errorSecureShortLinkLabel
+            errorSecureShortLinkLabel,
+
+            conversionTracking
         ])
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -163,7 +176,8 @@ class ViewController: UIViewController {
             createShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             copyShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             createSecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            copySecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+            copySecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            conversionTracking.widthAnchor.constraint(equalTo: stackView.widthAnchor),
         ])
     }
 
@@ -203,18 +217,17 @@ class ViewController: UIViewController {
         let parameters: ShortIOParameters
         do {
             parameters = try ShortIOParameters(
-                domain: "demodeeplinkapp.short.gy",
-                originalURL: "https://demodeeplinkapp.short.gy/yei3jh"
+                domain: "your_domain",
+                originalURL: "{https://{your_domain}"
             )
         } catch {
-//            finishLoading()
             shortLinkActivityIndicator.stopAnimating()
             createShortLinkButton.isEnabled = true
             errorShortLinkLabel.text = "Invalid input: \(error.localizedDescription)"
             return
         }
 
-        let apiKey = "pk_VPfQI2HDiStIVUB0"
+        let apiKey = "your_api_key"
 
         Task { @MainActor in
             do {
@@ -229,7 +242,6 @@ class ViewController: UIViewController {
             } catch {
                 errorShortLinkLabel.text = "Error: \(error.localizedDescription)"
             }
-//            finishLoading()
             shortLinkActivityIndicator.stopAnimating()
             createShortLinkButton.isEnabled = true
             loadingShortLinkLabel.isHidden = true
@@ -255,6 +267,17 @@ class ViewController: UIViewController {
             secureLinkActivityIndicator.stopAnimating()
             createSecureShortLinkButton.isEnabled = true
             loadingSecuredShortLinkLabel.isHidden = true
+        }
+    }
+
+    @objc private func trackingConversion() {
+        Task {
+            do {
+                let result = try await shortLinkSDK.trackConversion(originalURL: "https://{your_domain}", clid: "your_clid", conversionId: "your_coversionID")
+                print("result", result)
+            } catch {
+                print("Failed to track conversion: \(error)")
+            }
         }
     }
 }

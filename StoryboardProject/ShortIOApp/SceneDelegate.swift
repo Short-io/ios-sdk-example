@@ -20,8 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("Invalid universal link or URL components")
             return
         }
-        sdk.handleOpen(incomingURL) { result in
-            print("Host: \(result?.host), Path: \(result?.path)")
+        sdk.handleOpen(incomingURL) { result, error in
+            print("Host: \(result?.host), Path: \(result?.path)", "QueryParams: \(result?.queryItems)")
         }
     }
     

@@ -43,6 +43,17 @@ struct ContentView: View {
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)
+
+                Button(action: conversionTracking) {
+                    Text("Conversion Tracking")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
             }
             
             if let shortURL = shortURL {
@@ -92,7 +103,7 @@ struct ContentView: View {
         
         let parameters = ShortIOParameters(
             domain: "your_domain",
-            originalURL: "https://{your_domain}"
+            originalURL:"https://{your_domain}"
         )
         let apiKey = "your_api_key"
         
@@ -122,10 +133,21 @@ struct ContentView: View {
         Task {
             do {
                 let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
-                secureShortURL = result.securedShortUrl
+                secureShortURL = result.securedOriginalURL
                 print("result", result.securedOriginalURL, result.securedShortUrl)
             } catch {
                 print("Failed to create secure URL: \(error)")
+            }
+        }
+    }
+
+    private func conversionTracking() {
+        Task {
+            do {
+                let result = try await shortLinkSDK.trackConversion(originalURL: "https://{your_domain}", clid: "your_clid", conversionId: "your_coversionID")
+                print("result", result)
+            } catch {
+                print("Failed to track conversion: \(error)")
             }
         }
     }

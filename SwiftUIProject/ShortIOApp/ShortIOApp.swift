@@ -10,8 +10,8 @@ struct ShortIOApp: App {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                    sdk.handleOpen(url) { result in
-                        print("Host: \(result?.host), Path: \(result?.path)")
+                    sdk.handleOpen(url) { result, error in
+                        print("Host: \(result?.host), Path: \(result?.path)", "QueryParams: \(result?.queryItems)")
                     }
                 }
         }

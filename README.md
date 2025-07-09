@@ -78,7 +78,7 @@ let sdk = ShortIOSDK()
 
 let parameters = ShortIOParameters(
     domain: "your_domain",
-    originalURL: "https://yourdomain.com"
+    originalURL: "https://{your_domain}"
 )
 
 let apiKey = "your_api_key"
@@ -119,6 +119,21 @@ Task {
 - **`securedOriginalURL:`** An encrypted URL like `shortsecure://<Base64EncodedData>?<Base64IV>`
 
 - **`securedShortUrl:`** A Base64-encoded decryption key to be appended as a fragment (e.g. `#<key>`)
+
+## 🔄 Conversion Tracking
+
+Track conversions for your short links to measure campaign effectiveness. The SDK provides a simple method to record conversions.
+
+```swift
+Task {
+    do {
+        let result = try await shortLinkSDK.trackConversion(originalURL: "https://{your_domain}", clid: "your_clid", conversionId: "your_conversionID")
+        print("result", result)
+    } catch {
+        print("Failed to track conversion: \(error)")
+    }
+}
+```
 
 ## 🌐 Handling Universal Links
 
