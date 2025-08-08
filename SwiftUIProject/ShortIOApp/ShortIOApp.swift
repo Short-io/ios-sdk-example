@@ -10,8 +10,21 @@ struct ShortIOApp: App {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                    sdk.handleOpen(url) { result, error in
-                        print("Host: \(result?.host), Path: \(result?.path)", "QueryParams: \(result?.queryItems)")
+                    Task{
+                        await sdk.handleOpen(url) { result,destinationUrl, error  in
+                            if let error = error {
+                                    print("Error: \(error)")
+                                    return
+                                }
+
+                            if let components = result {
+                                print("Host: \(components.host ?? "nil")")
+                                print("Path: \(components.path)")
+                                print("DestinationUrl: \(destinationUrl ?? "nil")")
+                            } else {
+                                print("No components returned")
+                            }
+                        }
                     }
                 }
         }

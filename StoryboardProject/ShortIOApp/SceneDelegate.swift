@@ -20,8 +20,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("Invalid universal link or URL components")
             return
         }
-        sdk.handleOpen(incomingURL) { result, error in
-            print("Host: \(result?.host), Path: \(result?.path)", "QueryParams: \(result?.queryItems)")
+        Task{
+            await sdk.handleOpen(incomingURL) { result,destinationUrl, error  in
+                if let error = error {
+                        print("Error: \(error)")
+                        return
+                    }
+
+                if let components = result {
+                    print("Host: \(components.host ?? "nil")")
+                    print("Path: \(components.path)")
+                    print("QueryParams: \(result?.queryItems)")
+                    print("DestinationUrl: \(destinationUrl ?? "nil")")
+                } else {
+                    print("No components returned")
+                }
+            }
         }
     }
     

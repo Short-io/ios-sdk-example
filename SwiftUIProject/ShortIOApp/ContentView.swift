@@ -44,16 +44,6 @@ struct ContentView: View {
                 }
                 .padding(.horizontal)
 
-                Button(action: conversionTracking) {
-                    Text("Conversion Tracking")
-                        .font(.headline)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                .padding(.horizontal)
             }
             
             if let shortURL = shortURL {
@@ -137,17 +127,6 @@ struct ContentView: View {
                 print("result", result.securedOriginalURL, result.securedShortUrl)
             } catch {
                 print("Failed to create secure URL: \(error)")
-            }
-        }
-    }
-
-    private func conversionTracking() {
-        Task {
-            do {
-                let result = try await shortLinkSDK.trackConversion(originalURL: "https://{your_domain}", clid: "your_clid", conversionId: "your_coversionID")
-                print("result", result)
-            } catch {
-                print("Failed to track conversion: \(error)")
             }
         }
     }

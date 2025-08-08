@@ -35,17 +35,6 @@ class ViewController: UIViewController {
         return button
     }()
 
-    private let conversionTracking: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Conversion Tracking", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        button.backgroundColor = .systemBlue
-        button.tintColor = .white
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(trackingConversion), for: .touchUpInside)
-        return button
-    }()
-
     private let shortLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
     private let secureLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
 
@@ -158,8 +147,6 @@ class ViewController: UIViewController {
             resultSecureShortLinkLabel,
             copySecureShortLinkButton,
             errorSecureShortLinkLabel,
-
-            conversionTracking
         ])
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -177,7 +164,6 @@ class ViewController: UIViewController {
             copyShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             createSecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             copySecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            conversionTracking.widthAnchor.constraint(equalTo: stackView.widthAnchor),
         ])
     }
 
@@ -267,17 +253,6 @@ class ViewController: UIViewController {
             secureLinkActivityIndicator.stopAnimating()
             createSecureShortLinkButton.isEnabled = true
             loadingSecuredShortLinkLabel.isHidden = true
-        }
-    }
-
-    @objc private func trackingConversion() {
-        Task {
-            do {
-                let result = try await shortLinkSDK.trackConversion(originalURL: "https://{your_domain}", clid: "your_clid", conversionId: "your_coversionID")
-                print("result", result)
-            } catch {
-                print("Failed to track conversion: \(error)")
-            }
         }
     }
 }
