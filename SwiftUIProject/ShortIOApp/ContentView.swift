@@ -7,18 +7,18 @@ struct ContentView: View {
     @State private var errorMessage: String?
     @State private var isLoading: Bool = false
     @State private var secureShortURL: String?
-    private let shortLinkSDK = ShortIOSDK()
-    
+    private let shortLinkSDK = ShortIOSDK.shared // Ensure ShortLinkSDK is accessible
+
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            
+
             Text("Short Link Generator")
                 .font(.title)
                 .fontWeight(.bold)
-            
+
             if isLoading {
                 ProgressView("Creating short link...")
             } else {
@@ -44,8 +44,18 @@ struct ContentView: View {
                 }
                 .padding(.horizontal)
 
+                Button(action: conversionTracking) {
+                    Text("Create conversion Tracking")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
             }
-            
+
             if let shortURL = shortURL {
                 Text("Short URL: \(shortURL)")
                     .font(.subheadline)
@@ -60,7 +70,7 @@ struct ContentView: View {
                         }
                     }
             }
-            
+
             if let secureShortURL = secureShortURL {
                 Text("Secure Short URL: \(secureShortURL)")
                     .font(.subheadline)
@@ -75,7 +85,7 @@ struct ContentView: View {
                         }
                     }
             }
-            
+
             if let errorMessage = errorMessage {
                 Text("Error: \(errorMessage)")
                     .font(.subheadline)
@@ -85,23 +95,20 @@ struct ContentView: View {
         }
         .padding()
     }
-    
+
     private func createShortLink() {
         isLoading = true
         shortURL = nil
         errorMessage = nil
-        
+
         let parameters = ShortIOParameters(
-            domain: "your_domain",
-            originalURL:"https://{your_domain}"
+            originalURL:"your-original-url-here"
         )
-        let apiKey = "your_api_key"
-        
-        Task { @MainActor in
+
+        Task {
             do {
                 let result = try await shortLinkSDK.createShortLink(
-                    parameters: parameters,
-                    apiKey: apiKey
+                    parameters: parameters
                 )
                 switch result {
                 case .success(let response):
@@ -118,15 +125,26 @@ struct ContentView: View {
             isLoading = false
         }
     }
-    
+
     private func createEncryptedLink() {
         Task {
             do {
-                let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
+                let result = try shortLinkSDK.createSecure(originalURL: "your_original_url")
                 secureShortURL = result.securedOriginalURL
                 print("result", result.securedOriginalURL, result.securedShortUrl)
             } catch {
                 print("Failed to create secure URL: \(error)")
+            }
+        }
+    }
+
+    private func conversionTracking() {
+        Task {
+            do {
+                let result = try await shortLinkSDK.trackConversion(clid: "your_clid", domain: "your_domain", conversionId: "your_conversion_id")
+                print("result", result)
+            } catch {
+                print("Failed to track conversion: \(error)")
             }
         }
     }
