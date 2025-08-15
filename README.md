@@ -4,16 +4,17 @@
 
 This project helps developers understand how to:
 
-- Set up and use `ShortIOSDK`
 - Generate short URLs with customizable parameters
-- Integrate and handle Universal Links in SwiftUI and UIKit
+- Handle deep links via Universal Links
+- Track conversions
+- Use secure (encrypted) short links
 
 ## 📦 Requirements
 
 - iOS 13.0+
 - Xcode 13.0+
 - Swift 5+
-- A valid [Short.io](https://short.io/) account
+- A valid `enterprises` [Short.io](https://short.io/) account
 
 ## 🚀 Getting Started
 
@@ -35,22 +36,35 @@ Open `ShortIOApp.xcodeproj` or `ShortIOApp.xcworkspace` in Xcode, depending on t
 
 ## 🛠 Setup Instructions
 
-### 🔑 1. Add Your API Key
+### Initialize the SDK
 
-Open the appropriate file:
+Before using any functionality, you must initialize the SDK using your API key and domain in `AppDelegate` as part of application(launchOptions) for a UIKit app, or the @main initialization logic for a SwiftUI app.
 
-- **SwiftUI:** `ContentView.swift`
-- **UIKit:** `ViewController.swift`
-Replace the placeholder with your **Short.io Public API Key:**
 
-```bash
-let apiKey = "your_api_key"
+
+```swift
+...
+import ShortIOSDK
+...
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  ...
+  func application(...) {
+    ...
+    let sdk = ShortIOSDK.shared
+
+    sdk.initialize(apiKey: "your_apiKey_here", domain: "your_domain_here")
+    ...
+  }
+  ...
+}
 ```
+
+**Note:** Both `apiKey` and `domain` are the required parameters.
 
 🔗 **Need help finding your API key?**
 
 Follow this guide in the [ShortIOSDK README](https://github.com/Short-io/ios-sdk?tab=readme-ov-file#step-1-get-public-api-key-from-shortio).
-
 
 
 ### 🌐 2. Set Short Link Parameters
@@ -74,7 +88,7 @@ The app demonstrates:
 Using your domain and original URL, you can generate a short link like this:
 
 ```swift
-let sdk = ShortIOSDK()
+let sdk = ShortIOSDK.shared
 
 let parameters = ShortIOParameters(
     domain: "your_domain",
@@ -98,6 +112,8 @@ Task {
 }
 ```
 
+**⚠️ Note**: Both `apiKey` and `domain` parameters is deprecated. Use the instance's configured API key instead. Call initialize(apiKey:domain:) before using this method
+
 ### 🔐 Secure Short Links (Encrypted)
 
 If you want to encrypt the original URL, the SDK provides a `createSecure` function that uses AES-GCM encryption.
@@ -105,9 +121,11 @@ If you want to encrypt the original URL, the SDK provides a `createSecure` funct
 #### 🔧 Example
 
 ```swift
+let sdk = ShortIOSDK.shared
+
 Task {
     do {
-        let result = try shortLinkSDK.createSecure(originalURL: "https://{your_domain}")
+        let result = try sdk.createSecure(originalURL: "your_originalURL_here")
         print("result", result.securedOriginalURL, result.securedShortUrl)
     } catch {
         print("Failed to create secure URL: \(error)")
@@ -120,6 +138,32 @@ Task {
 
 - **`securedShortUrl:`** A Base64-encoded decryption key to be appended as a fragment (e.g. `#<key>`)
 
+### 🔄 Conversion Tracking
+
+Track conversions for your short links to measure campaign effectiveness. The SDK provides a simple method to record conversions.
+
+```swift
+import ShortIOSDK
+
+let sdk = ShortIOSDK.shared
+
+Task {
+    do {
+        let result = try await sdk.trackConversion(
+            domain: "your_domain", // ⚠️ Deprecated (optional):
+            clid: "your_clid", // ⚠️ Deprecated (optional):
+            conversionId: "your_conversionID" (optional)
+        )
+        print("result", result)
+    } catch {
+        print("Failed to track conversion: \(error)")
+    }
+}
+```
+
+**⚠️ Note:** All three parameters — `domain`, `clid`, and `conversionId` — are optional.
+- `domain` and `clid` are deprecated and may be removed in future versions.
+
 ## 🌐 Handling Universal Links
 
 ### SwiftUI Implementation
@@ -128,9 +172,18 @@ Use the `.onOpenURL` modifier to process incoming links:
 
 ```swift
 .onOpenURL { url in
-    sdk.handleOpen(url) { result in
-        print("Navigated to path: \(result?.path ?? "")")
+    print("url", url)
+        sdk.handleOpen(url) { result in
+            switch result {
+            case .success(let result):
+                // Handle successful URL processing
+                print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
+            case .failure(let error):
+                // Handle error with proper error type
+                print("Error: \(error.localizedDescription)")
+        }
     }
+
 }
 ```
 
@@ -146,7 +199,14 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
             return
         }
         sdk.handleOpen(incomingURL) { result in
-        print("Host: \(result?.host), Path: \(result?.path)")
+            switch result {
+                case .success(let result):
+                    // Handle successful URL processing
+                    print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
+                case .failure(let error):
+                    // Handle error with proper error type
+                    print("Error: \(error.localizedDescription)")
+        }
     }
 }
 ```

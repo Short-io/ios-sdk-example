@@ -1,4 +1,5 @@
 import UIKit
+import ShortIOSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -6,6 +7,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+        let sdk = ShortIOSDK.shared
+
+        sdk.initialize(apiKey: "your_api_key_here", domain: "your_domain_here")
+
         // Override point for customization after application launch.
         return true
     }

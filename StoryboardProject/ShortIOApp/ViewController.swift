@@ -3,7 +3,7 @@ import ShortIOSDK
 
 class ViewController: UIViewController {
 
-    private let shortLinkSDK = ShortIOSDK()
+    private let shortLinkSDK = ShortIOSDK.shared
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -32,6 +32,17 @@ class ViewController: UIViewController {
         button.tintColor = .white
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(createSecureShortLink), for: .touchUpInside)
+        return button
+    }()
+
+    private let conversionTrackingButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Conversion Tracking", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(conversionTracking), for: .touchUpInside)
         return button
     }()
 
@@ -147,6 +158,8 @@ class ViewController: UIViewController {
             resultSecureShortLinkLabel,
             copySecureShortLinkButton,
             errorSecureShortLinkLabel,
+
+            conversionTrackingButton
         ])
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -164,6 +177,7 @@ class ViewController: UIViewController {
             copyShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             createSecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             copySecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            conversionTrackingButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
         ])
     }
 
@@ -203,7 +217,6 @@ class ViewController: UIViewController {
         let parameters: ShortIOParameters
         do {
             parameters = try ShortIOParameters(
-                domain: "your_domain",
                 originalURL: "{https://{your_domain}"
             )
         } catch {
@@ -213,11 +226,9 @@ class ViewController: UIViewController {
             return
         }
 
-        let apiKey = "your_api_key"
-
         Task { @MainActor in
             do {
-                let result = try await shortLinkSDK.createShortLink(parameters: parameters, apiKey: apiKey)
+                let result = try await shortLinkSDK.createShortLink(parameters: parameters)
                 switch result {
                 case .success(let response):
                     resultShortLinkLabel.text = "Short URL: \(response.shortURL)"
@@ -253,6 +264,17 @@ class ViewController: UIViewController {
             secureLinkActivityIndicator.stopAnimating()
             createSecureShortLinkButton.isEnabled = true
             loadingSecuredShortLinkLabel.isHidden = true
+        }
+    }
+
+    @objc private func conversionTracking() {
+        Task {
+            do {
+                let result = try await shortLinkSDK.trackConversion(clid: "your_clid", domain: "your_domain", conversionId: "your_conversion_id")
+                print("result", result)
+            } catch {
+                print("Failed to track conversion: \(error)")
+            }
         }
     }
 }

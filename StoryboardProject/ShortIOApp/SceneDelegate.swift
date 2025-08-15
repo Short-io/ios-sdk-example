@@ -4,8 +4,8 @@ import ShortIOSDK
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    private let sdk = ShortIOSDK()
-    
+    private let sdk = ShortIOSDK.shared
+
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -20,21 +20,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("Invalid universal link or URL components")
             return
         }
-        Task{
-            await sdk.handleOpen(incomingURL) { result,destinationUrl, error  in
-                if let error = error {
-                        print("Error: \(error)")
-                        return
-                    }
-
-                if let components = result {
-                    print("Host: \(components.host ?? "nil")")
-                    print("Path: \(components.path)")
-                    print("QueryParams: \(result?.queryItems)")
-                    print("DestinationUrl: \(destinationUrl ?? "nil")")
-                } else {
-                    print("No components returned")
-                }
+        sdk.handleOpen(incomingURL) { result in
+            switch result {
+            case .success(let result):
+                // Handle successful URL processing
+                print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
+            case .failure(let error):
+                // Handle error with proper error type
+                print("Error: \(error.localizedDescription)")
             }
         }
     }
