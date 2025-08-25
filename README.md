@@ -173,17 +173,20 @@ Use the `.onOpenURL` modifier to process incoming links:
 ```swift
 .onOpenURL { url in
     print("url", url)
-        sdk.handleOpen(url) { result in
-            switch result {
+    sdk.handleOpen(url) { result in
+        switch result {
             case .success(let result):
                 // Handle successful URL processing
-                print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
+                print(
+                    "Original URL: \(result.url)",
+                    "Host: \(result.host), Path: \(result.path)",
+                    "QueryParams: \(result.queryItems)"
+                )
             case .failure(let error):
                 // Handle error with proper error type
                 print("Error: \(error.localizedDescription)")
         }
     }
-
 }
 ```
 
@@ -198,14 +201,18 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
             print("Invalid universal link or URL components")
             return
         }
-        sdk.handleOpen(incomingURL) { result in
-            switch result {
-                case .success(let result):
-                    // Handle successful URL processing
-                    print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
-                case .failure(let error):
-                    // Handle error with proper error type
-                    print("Error: \(error.localizedDescription)")
+    sdk.handleOpen(incomingURL) { result in
+        switch result {
+        case .success(let result):
+            // Handle successful URL processing
+            print(
+                "Original URL: \(result.url)",
+                "Host: \(result.host), Path: \(result.path)",
+                "QueryParams: \(result.queryItems)"
+            )
+        case .failure(let error):
+            // Handle error with proper error type
+            print("Error: \(error.localizedDescription)")
         }
     }
 }
