@@ -150,9 +150,7 @@ let sdk = ShortIOSDK.shared
 Task {
     do {
         let result = try await sdk.trackConversion(
-            domain: "your_domain", // ⚠️ Deprecated (optional):
-            clid: "your_clid", // ⚠️ Deprecated (optional):
-            conversionId: "your_conversionID" (optional)
+            conversionId: "your_conversionID" // optional
         )
         print("result", result)
     } catch {
@@ -161,10 +159,24 @@ Task {
 }
 ```
 
-**⚠️ Note:** All three parameters — `domain`, `clid`, and `conversionId` — are optional.
-- `domain` and `clid` are deprecated and may be removed in future versions.
+**⚠️ Note:** `conversionId` is optional. The `clid` is captured by `handleOpen(_:)` and the
+domain by `initialize(apiKey:domain:)`, so neither needs to be passed.
+
+The `trackConversion(clid:domain:conversionId:)` overload still works but is deprecated
+and will be removed in `2.0.0`.
 
 ## 🌐 Handling Universal Links
+
+**⚠️ Prerequisite:** Universal Links require the **Associated Domains** capability
+(`applinks:yourshortdomain.short.gy`) and a matching `<TeamID>.<BundleID>` configured under
+**Domain Settings → Deep links** on Short.io. This needs a **paid** Apple Developer
+membership — free personal teams cannot provision Associated Domains. See the
+[SDK README](https://github.com/Short-io/ios-sdk#-deep-linking-setup-universal-links-for-ios)
+for the full setup.
+
+Without that setup the callbacks below never fire. To exercise `handleOpen(_:)` on its own,
+call it directly with a short link — it is a plain HTTPS request and needs no entitlement
+(the SwiftUI sample's **Resolve Short Link** button does exactly this).
 
 ### SwiftUI Implementation
 
@@ -172,19 +184,18 @@ Use the `.onOpenURL` modifier to process incoming links:
 
 ```swift
 .onOpenURL { url in
-    print("url", url)
-    sdk.handleOpen(url) { result in
-        switch result {
-            case .success(let result):
-                // Handle successful URL processing
-                print(
-                    "Original URL: \(result.url)",
-                    "Host: \(result.host), Path: \(result.path)",
-                    "QueryParams: \(result.queryItems)"
-                )
-            case .failure(let error):
-                // Handle error with proper error type
-                print("Error: \(error.localizedDescription)")
+    Task {
+        do {
+            let components = try await sdk.handleOpen(url)
+            // Handle successful URL processing
+            print(
+                "Original URL: \(components.url?.absoluteString ?? "unknown")",
+                "Host: \(components.host ?? "nil"), Path: \(components.path)",
+                "QueryParams: \(components.queryItems ?? [])"
+            )
+        } catch {
+            // Handle error with proper error type
+            print("Error: \(error.localizedDescription)")
         }
     }
 }
@@ -201,22 +212,25 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
             print("Invalid universal link or URL components")
             return
         }
-    sdk.handleOpen(incomingURL) { result in
-        switch result {
-        case .success(let result):
+    Task {
+        do {
+            let components = try await sdk.handleOpen(incomingURL)
             // Handle successful URL processing
             print(
-                "Original URL: \(result.url)",
-                "Host: \(result.host), Path: \(result.path)",
-                "QueryParams: \(result.queryItems)"
+                "Original URL: \(components.url?.absoluteString ?? "unknown")",
+                "Host: \(components.host ?? "nil"), Path: \(components.path)",
+                "QueryParams: \(components.queryItems ?? [])"
             )
-        case .failure(let error):
+        } catch {
             // Handle error with proper error type
             print("Error: \(error.localizedDescription)")
         }
     }
 }
 ```
+
+**⚠️ Deprecated:** the completion-handler overload `handleOpen(_:completion:)` still works but
+is deprecated and will be removed in `2.0.0`. Use the `async` form above.
 
 ## 🤝 Contributing
 

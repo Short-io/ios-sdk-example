@@ -7,6 +7,8 @@ struct ContentView: View {
     @State private var errorMessage: String?
     @State private var isLoading: Bool = false
     @State private var secureShortURL: String?
+    @State private var incomingLink: String = ""
+    @State private var destinationURL: String?
     private let shortLinkSDK = ShortIOSDK.shared // Ensure ShortLinkSDK is accessible
 
     var body: some View {
@@ -54,6 +56,27 @@ struct ContentView: View {
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)
+
+                // Runs handleOpen(_:) on a pasted link — the same call a universal
+                // link makes, minus the Associated Domains setup.
+                TextField("https://yourshortdomain.short.gy/slug", text: $incomingLink)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .keyboardType(.URL)
+                    .padding(.horizontal)
+
+                Button(action: resolveShortLink) {
+                    Text("Resolve Short Link")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(incomingLink.isEmpty ? Color.gray : Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .disabled(incomingLink.isEmpty)
+                .padding(.horizontal)
             }
 
             if let shortURL = shortURL {
@@ -72,7 +95,7 @@ struct ContentView: View {
             }
 
             if let secureShortURL = secureShortURL {
-                Text("Secure Short URL: \(secureShortURL)")
+                Text("Encrypted URL: \(secureShortURL)")
                     .font(.subheadline)
                     .foregroundColor(.green)
                     .padding()
@@ -84,6 +107,13 @@ struct ContentView: View {
                             Image(systemName: "doc.on.doc")
                         }
                     }
+            }
+
+            if let destinationURL = destinationURL {
+                Text("Destination: \(destinationURL)")
+                    .font(.subheadline)
+                    .foregroundColor(.green)
+                    .padding()
             }
 
             if let errorMessage = errorMessage {
@@ -101,8 +131,9 @@ struct ContentView: View {
         shortURL = nil
         errorMessage = nil
 
+        // originalURL is the destination you want shortened, not your Short.io domain.
         let parameters = ShortIOParameters(
-            originalURL:"your-original-url-here"
+            originalURL: "https://example.com"
         )
 
         Task {
@@ -129,7 +160,7 @@ struct ContentView: View {
     private func createEncryptedLink() {
         Task {
             do {
-                let result = try shortLinkSDK.createSecure(originalURL: "your_original_url")
+                let result = try shortLinkSDK.createSecure(originalURL: "https://example.com")
                 secureShortURL = result.securedOriginalURL
                 print("result", result.securedOriginalURL, result.securedShortUrl)
             } catch {
@@ -138,10 +169,34 @@ struct ContentView: View {
         }
     }
 
+    private func resolveShortLink() {
+        destinationURL = nil
+        errorMessage = nil
+
+        guard let url = URL(string: incomingLink) else {
+            errorMessage = "Not a valid URL"
+            return
+        }
+
+        Task {
+            do {
+                let components = try await shortLinkSDK.handleOpen(url)
+                destinationURL = components.url?.absoluteString ?? components.string
+                print("Host: \(components.host ?? "nil")",
+                      "Path: \(components.path)",
+                      "QueryParams: \(components.queryItems ?? [])")
+            } catch {
+                print("Error: \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
     private func conversionTracking() {
         Task {
             do {
-                let result = try await shortLinkSDK.trackConversion(clid: "your_clid", domain: "your_domain", conversionId: "your_conversion_id")
+                // clid is captured by handleOpen(_:), domain by initialize(apiKey:domain:)
+                let result = try await shortLinkSDK.trackConversion(conversionId: "your_conversion_id")
                 print("result", result)
             } catch {
                 print("Failed to track conversion: \(error)")

@@ -9,7 +9,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
         let sdk = ShortIOSDK.shared
 
-        sdk.initialize(apiKey: "your-api-key-here", domain: "your-domain-here")
+        // Demo credentials. The API key is a Short.io *public* key, which is designed to ship
+        // inside client apps — replace both with your own.
+        sdk.initialize(apiKey: "pk_rmfLWoun5GDaCpAr", domain: "demodeeplinkapp.short.gy")
 
         // Override point for customization after application launch.
         return true

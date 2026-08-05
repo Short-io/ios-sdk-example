@@ -12,13 +12,13 @@ struct ShortIOApp: App {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                    sdk.handleOpen(url) { result in
-                        switch result {
-                        case .success(let result):
-                            // Handle successful URL processing
-                            print("result", result, "Host: \(result.host), Path: \(result.path)", "QueryParams: \(result.queryItems)")
-                        case .failure(let error):
-                            // Handle error with proper error type
+                    Task {
+                        do {
+                            let components = try await sdk.handleOpen(url)
+                            print("Host: \(components.host ?? "nil")",
+                                  "Path: \(components.path)",
+                                  "QueryParams: \(components.queryItems ?? [])")
+                        } catch {
                             print("Error: \(error.localizedDescription)")
                         }
                     }
