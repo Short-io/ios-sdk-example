@@ -1,5 +1,7 @@
 # 📱 ShortIOApp – iOS Sample Project for ShortIOSDK
 
+[![CI](https://github.com/Short-io/ios-sdk-example/actions/workflows/ci.yml/badge.svg)](https://github.com/Short-io/ios-sdk-example/actions/workflows/ci.yml)
+
 **ShortIOApp** is a sample iOS project that demonstrates how to integrate and use the [ShortIOSDK](https://github.com/Short-io/ios-sdk) for generating short links and handling universal deep links using [Short.io](https://short.io/).
 
 This project helps developers understand how to:
