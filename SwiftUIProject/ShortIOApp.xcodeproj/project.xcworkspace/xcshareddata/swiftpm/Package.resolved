@@ -6,8 +6,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Short-io/ios-sdk/",
       "state" : {
-        "branch" : "main",
-        "revision" : "46ae8e395a085365d2b62320b41c917146445e5d"
+        "revision" : "c42975cfbabfad9e77a071611bfebca73a374e05"
       }
     }
   ],

@@ -578,8 +578,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Short-io/ios-sdk/";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = c42975cfbabfad9e77a071611bfebca73a374e05;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
