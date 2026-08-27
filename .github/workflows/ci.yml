@@ -23,8 +23,8 @@ jobs:
   # launch-performance boilerplate, so `xcodebuild test` here would report a
   # green suite that asserts nothing. What is genuinely worth verifying is that
   # both sample apps still compile and link against the pinned ShortIOSDK — so
-  # that is what the job is named for and what it does. Promote this back to
-  # `test` once ShortIOAppTests carries real assertions.
+  # that is what the job is named for and what it does. Fold it into `test`
+  # below once ShortIOAppTests carries real assertions.
   build:
     name: build ${{ matrix.project }}
     runs-on: macos-15
@@ -96,3 +96,14 @@ jobs:
           name: build-results-${{ matrix.project }}
           path: BuildResults.xcresult
           retention-days: 7
+
+  # The main ruleset requires a check named `test`, which the matrix reports as
+  # `build <project>`. always() so a failed build still reports the check.
+  test:
+    name: test
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: '[ "${{ needs.build.result }}" = "success" ]'
