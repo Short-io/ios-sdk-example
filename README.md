@@ -13,10 +13,13 @@ This project helps developers understand how to:
 
 ## 📦 Requirements
 
-- iOS 13.0+
-- Xcode 13.0+
-- Swift 5+
+- iOS 15.0+ (ShortIOSDK floor; these sample apps target iOS 18.4)
+- Xcode 16.0+
+- Swift 6.0
 - A valid `enterprises` [Short.io](https://short.io/) account
+
+Both sample projects resolve [ShortIOSDK](https://github.com/Short-io/ios-sdk) `2.0.0`
+via Swift Package Manager. No manual setup is needed; Xcode fetches it on first open.
 
 ## 🚀 Getting Started
 
@@ -164,8 +167,8 @@ Task {
 **⚠️ Note:** `conversionId` is optional. The `clid` is captured by `handleOpen(_:)` and the
 domain by `initialize(apiKey:domain:)`, so neither needs to be passed.
 
-The `trackConversion(clid:domain:conversionId:)` overload still works but is deprecated
-and will be removed in `2.0.0`.
+**Deprecated in 2.0.0.** Use `trackConversion(conversionId:)` instead.
+This overload still works and will be removed in a future major release.
 
 ## 🌐 Handling Universal Links
 
@@ -231,8 +234,9 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
 }
 ```
 
-**⚠️ Deprecated:** the completion-handler overload `handleOpen(_:completion:)` still works but
-is deprecated and will be removed in `2.0.0`. Use the `async` form above.
+**⚠️ Deprecated in 2.0.0.** Use the `async` form above instead.
+The completion-handler overload `handleOpen(_:completion:)` still works and will be
+removed in a future major release.
 
 ## 🤝 Contributing
 
