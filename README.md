@@ -172,7 +172,7 @@ Task {
 domain by `initialize(apiKey:domain:)`, so neither needs to be passed.
 
 **Deprecated in 2.0.0.** Use `trackConversion(conversionId:)` instead.
-This overload still works and will be removed in a future major release.
+This overload still works and will be removed in future releases.
 
 ## 🌐 Handling Universal Links
 
@@ -240,7 +240,7 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
 
 **⚠️ Deprecated in 2.0.0.** Use the `async` form above instead.
 The completion-handler overload `handleOpen(_:completion:)` still works and will be
-removed in a future major release.
+removed in future releases.
 
 ## 🤝 Contributing
 
