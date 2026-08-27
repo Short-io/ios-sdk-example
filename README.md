@@ -45,6 +45,10 @@ Open `ShortIOApp.xcodeproj` or `ShortIOApp.xcworkspace` in Xcode, depending on t
 
 Before using any functionality, you must initialize the SDK using your API key and domain in `AppDelegate` as part of application(launchOptions) for a UIKit app, or the @main initialization logic for a SwiftUI app.
 
+Both sample apps ship with `your_public_apiKey` / `yourshortdomain.short.gy` placeholders in
+`AppDelegate.swift`. Replace them with your own before running, or every request returns an
+authentication error. See [Get Public API Key](https://github.com/Short-io/ios-sdk#get-public-api-key-from-shortio).
+
 
 
 ```swift
