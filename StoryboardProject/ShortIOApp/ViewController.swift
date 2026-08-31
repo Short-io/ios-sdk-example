@@ -302,7 +302,7 @@ class ViewController: UIViewController {
         Task { @MainActor in
             do {
                 let result = try shortLinkSDK.createSecure(originalURL: "https://example.com")
-                resultSecureShortLinkLabel.text = "Encrypted URL: \(result.securedOriginalURL)"
+                resultSecureShortLinkLabel.text = "Encrypted URL: \(result.securedOriginalURL)\(result.securedShortUrl)"
                 copySecureShortLinkButton.isHidden = false
             } catch {
                 errorSecureShortLinkLabel.text = "Error: \(error.localizedDescription)"

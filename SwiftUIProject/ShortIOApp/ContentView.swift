@@ -144,14 +144,11 @@ struct ContentView: View {
                 switch result {
                 case .success(let response):
                     shortURL = response.shortURL
-                    print("Short URL created: \(response.shortURL)")
                 case .failure(let errorResponse):
-                    print("Error occurred: \(errorResponse.message), Code: \(errorResponse.code ?? "N/A")")
                     errorMessage = errorResponse.message
                 }
-                print("ress", result)
             } catch {
-                print("Error: \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
             }
             isLoading = false
         }
@@ -161,10 +158,10 @@ struct ContentView: View {
         Task {
             do {
                 let result = try shortLinkSDK.createSecure(originalURL: "https://example.com")
-                secureShortURL = result.securedOriginalURL
-                print("result", result.securedOriginalURL, result.securedShortUrl)
+                // securedShortUrl is the "#<key>" fragment; without it the link cannot be decrypted.
+                secureShortURL = result.securedOriginalURL + result.securedShortUrl
             } catch {
-                print("Failed to create secure URL: \(error)")
+                errorMessage = error.localizedDescription
             }
         }
     }
@@ -186,7 +183,6 @@ struct ContentView: View {
                       "Path: \(components.path)",
                       "QueryParams: \(components.queryItems ?? [])")
             } catch {
-                print("Error: \(error.localizedDescription)")
                 errorMessage = error.localizedDescription
             }
         }
@@ -196,10 +192,9 @@ struct ContentView: View {
         Task {
             do {
                 // clid is captured by handleOpen(_:), domain by initialize(apiKey:domain:)
-                let result = try await shortLinkSDK.trackConversion(conversionId: "your_conversion_id")
-                print("result", result)
+                _ = try await shortLinkSDK.trackConversion(conversionId: "your_conversion_id")
             } catch {
-                print("Failed to track conversion: \(error)")
+                errorMessage = error.localizedDescription
             }
         }
     }
