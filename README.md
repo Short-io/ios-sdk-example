@@ -94,21 +94,18 @@ The app demonstrates:
 
 ### ✅ Generating Short Links
 
-Using your domain and original URL, you can generate a short link like this:
+With the SDK initialized, you can generate a short link like this:
 
 ```swift
 let sdk = ShortIOSDK.shared
 
 let parameters = ShortIOParameters(
-    domain: "your_domain",
-    originalURL: "https://{your_domain}"
+    originalURL: "https://example.com"
 )
-
-let apiKey = "your_api_key"
 
 Task {
     do {
-        let result = try await sdk.createShortLink(parameters: parameters, apiKey: apiKey)
+        let result = try await sdk.createShortLink(parameters: parameters)
         switch result {
             case .success(let response):
                 print("Short URL created: \(response.shortURL)")
@@ -121,7 +118,7 @@ Task {
 }
 ```
 
-**⚠️ Note**: Both `apiKey` and `domain` parameters is deprecated. Use the instance's configured API key instead. Call initialize(apiKey:domain:) before using this method
+**⚠️ Note**: The `apiKey` and `domain` parameters are deprecated. Call `initialize(apiKey:domain:)` first and the instance uses its configured values.
 
 ### 🔐 Secure Short Links (Encrypted)
 
@@ -195,7 +192,7 @@ Use the `.onOpenURL` modifier to process incoming links:
 .onOpenURL { url in
     Task {
         do {
-            let components = try await sdk.handleOpen(url)
+            let components = try await ShortIOSDK.shared.handleOpen(url)
             // Handle successful URL processing
             print(
                 "Original URL: \(components.url?.absoluteString ?? "unknown")",
@@ -223,7 +220,7 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         }
     Task {
         do {
-            let components = try await sdk.handleOpen(incomingURL)
+            let components = try await ShortIOSDK.shared.handleOpen(incomingURL)
             // Handle successful URL processing
             print(
                 "Original URL: \(components.url?.absoluteString ?? "unknown")",
