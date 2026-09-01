@@ -95,7 +95,7 @@ struct ContentView: View {
             }
 
             if let secureShortURL = secureShortURL {
-                Text("Encrypted URL: \(secureShortURL)")
+                Text("Secure Short Link: \(secureShortURL)")
                     .font(.subheadline)
                     .foregroundColor(.green)
                     .padding()
@@ -155,14 +155,27 @@ struct ContentView: View {
     }
 
     private func createEncryptedLink() {
+        isLoading = true
+        secureShortURL = nil
+        errorMessage = nil
+
         Task {
             do {
-                let result = try shortLinkSDK.createSecure(originalURL: "https://example.com")
-                // securedShortUrl is the "#<key>" fragment; without it the link cannot be decrypted.
-                secureShortURL = result.securedOriginalURL + result.securedShortUrl
+                let secure = try shortLinkSDK.createSecure(originalURL: "https://example.com")
+
+                // The ciphertext is what gets shortened; the key never reaches the server.
+                let parameters = ShortIOParameters(originalURL: secure.securedOriginalURL)
+                switch try await shortLinkSDK.createShortLink(parameters: parameters) {
+                case .success(let response):
+                    // securedShortUrl is the "#<key>" fragment the browser decrypts with.
+                    secureShortURL = response.shortURL + secure.securedShortUrl
+                case .failure(let errorResponse):
+                    errorMessage = errorResponse.message
+                }
             } catch {
                 errorMessage = error.localizedDescription
             }
+            isLoading = false
         }
     }
 

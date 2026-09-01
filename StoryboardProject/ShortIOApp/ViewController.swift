@@ -244,8 +244,8 @@ class ViewController: UIViewController {
             text = resultShortLinkLabel.text?.replacingOccurrences(of: "Short URL: ", with: "")
             message = "Short URL copied to clipboard."
         case 2:
-            text = resultSecureShortLinkLabel.text?.replacingOccurrences(of: "Encrypted URL: ", with: "")
-            message = "Encrypted URL copied to clipboard."
+            text = resultSecureShortLinkLabel.text?.replacingOccurrences(of: "Secure Short Link: ", with: "")
+            message = "Secure short link copied to clipboard."
         default:
             return
         }
@@ -301,9 +301,18 @@ class ViewController: UIViewController {
 
         Task { @MainActor in
             do {
-                let result = try shortLinkSDK.createSecure(originalURL: "https://example.com")
-                resultSecureShortLinkLabel.text = "Encrypted URL: \(result.securedOriginalURL)\(result.securedShortUrl)"
-                copySecureShortLinkButton.isHidden = false
+                let secure = try shortLinkSDK.createSecure(originalURL: "https://example.com")
+
+                // The ciphertext is what gets shortened; the key never reaches the server.
+                let parameters = ShortIOParameters(originalURL: secure.securedOriginalURL)
+                switch try await shortLinkSDK.createShortLink(parameters: parameters) {
+                case .success(let response):
+                    // securedShortUrl is the "#<key>" fragment the browser decrypts with.
+                    resultSecureShortLinkLabel.text = "Secure Short Link: \(response.shortURL)\(secure.securedShortUrl)"
+                    copySecureShortLinkButton.isHidden = false
+                case .failure(let errorResponse):
+                    errorSecureShortLinkLabel.text = "Error: \(errorResponse.message)"
+                }
             } catch {
                 errorSecureShortLinkLabel.text = "Error: \(error.localizedDescription)"
             }
