@@ -3,7 +3,7 @@ import ShortIOSDK
 
 class ViewController: UIViewController {
 
-    private let shortLinkSDK = ShortIOSDK()
+    private let shortLinkSDK = ShortIOSDK.shared
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -13,20 +13,79 @@ class ViewController: UIViewController {
         return label
     }()
 
-    private let createButton: UIButton = {
+    private let createShortLinkButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Create Short Link", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         button.backgroundColor = .systemBlue
         button.tintColor = .white
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(createShortLink), for: .touchUpInside)
         return button
     }()
 
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
+    private let createSecureShortLinkButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Create Secure Short Link", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        return button
+    }()
 
-    private let loadingLabel: UILabel = {
+    private let conversionTrackingButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Conversion Tracking", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        return button
+    }()
+
+    /// Runs handleOpen(_:) on a pasted link — the same call a universal link makes,
+    /// minus the Associated Domains setup.
+    private let incomingLinkField: UITextField = {
+        let field = UITextField()
+        field.placeholder = "https://yourshortdomain.short.gy/slug"
+        field.borderStyle = .roundedRect
+        field.autocapitalizationType = .none
+        field.autocorrectionType = .no
+        field.keyboardType = .URL
+        field.clearButtonMode = .whileEditing
+        return field
+    }()
+
+    private let resolveShortLinkButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Resolve Short Link", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        return button
+    }()
+
+    private let resultDestinationLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = .systemGreen
+        return label
+    }()
+
+    private let errorDestinationLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = .systemRed
+        return label
+    }()
+
+    private let shortLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
+    private let secureLinkActivityIndicator = UIActivityIndicatorView(style: .medium)
+
+    private let loadingShortLinkLabel: UILabel = {
         let label = UILabel()
         label.text = "Creating Short Link..."
         label.textAlignment = .center
@@ -35,8 +94,18 @@ class ViewController: UIViewController {
         label.isHidden = true
         return label
     }()
+    
+    private let loadingSecuredShortLinkLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Creating Secured Short Link..."
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 14)
+        label.isHidden = true
+        return label
+    }()
 
-    private let resultLabel: UILabel = {
+    private let resultShortLinkLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -44,7 +113,15 @@ class ViewController: UIViewController {
         return label
     }()
 
-    private let copyButton: UIButton = {
+    private let resultSecureShortLinkLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = .systemGreen
+        return label
+    }()
+
+    private let copyShortLinkButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Copy Short Link", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
@@ -52,11 +129,31 @@ class ViewController: UIViewController {
         button.tintColor = .white
         button.layer.cornerRadius = 8
         button.isHidden = true
-        button.addTarget(self, action: #selector(copyToClipboard), for: .touchUpInside)
+        button.tag = 1
         return button
     }()
 
-    private let errorLabel: UILabel = {
+    private let copySecureShortLinkButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Copy Secure Short Link", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.backgroundColor = .systemGray
+        button.tintColor = .white
+        button.layer.cornerRadius = 8
+        button.isHidden = true
+        button.tag = 2
+        return button
+    }()
+
+    private let errorShortLinkLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = .systemRed
+        return label
+    }()
+
+    private let errorSecureShortLinkLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -68,24 +165,55 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         layoutUI()
+        wireActions()
+    }
+
+    /// Button targets must be attached here, not in the property initializers —
+    /// inside those closures `self` is not the view controller instance.
+    private func wireActions() {
+        createShortLinkButton.addTarget(self, action: #selector(createShortLink), for: .touchUpInside)
+        createSecureShortLinkButton.addTarget(self, action: #selector(createSecureShortLink), for: .touchUpInside)
+        conversionTrackingButton.addTarget(self, action: #selector(conversionTracking), for: .touchUpInside)
+        resolveShortLinkButton.addTarget(self, action: #selector(resolveShortLink), for: .touchUpInside)
+        copyShortLinkButton.addTarget(self, action: #selector(copyToClipboard(_:)), for: .touchUpInside)
+        copySecureShortLinkButton.addTarget(self, action: #selector(copyToClipboard(_:)), for: .touchUpInside)
     }
 
     private func layoutUI() {
-        let loaderStack = UIStackView(arrangedSubviews: [activityIndicator, loadingLabel])
-        loaderStack.axis = .vertical
-        loaderStack.alignment = .center
-        loaderStack.spacing = 8
+        let shortLinkLoaderStack = UIStackView(arrangedSubviews: [shortLinkActivityIndicator, loadingShortLinkLabel])
+        shortLinkLoaderStack.axis = .vertical
+        shortLinkLoaderStack.alignment = .center
+        shortLinkLoaderStack.spacing = 8
+
+        let secureLinkLoaderStack = UIStackView(arrangedSubviews: [secureLinkActivityIndicator, loadingSecuredShortLinkLabel])
+        secureLinkLoaderStack.axis = .vertical
+        secureLinkLoaderStack.alignment = .center
+        secureLinkLoaderStack.spacing = 8
 
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
-            createButton,
-            loaderStack,
-            resultLabel,
-            copyButton,
-            errorLabel
+
+            createShortLinkButton,
+            shortLinkLoaderStack,
+            resultShortLinkLabel,
+            copyShortLinkButton,
+            errorShortLinkLabel,
+
+            createSecureShortLinkButton,
+            secureLinkLoaderStack,
+            resultSecureShortLinkLabel,
+            copySecureShortLinkButton,
+            errorSecureShortLinkLabel,
+
+            conversionTrackingButton,
+
+            incomingLinkField,
+            resolveShortLinkButton,
+            resultDestinationLabel,
+            errorDestinationLabel
         ])
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 10
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -95,61 +223,140 @@ class ViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            createButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            copyButton.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+
+            createShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            copyShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            createSecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            copySecureShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            conversionTrackingButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            incomingLinkField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            resolveShortLinkButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
         ])
     }
 
-    @objc private func copyToClipboard() {
-        guard let text = resultLabel.text?.replacingOccurrences(of: "Short URL: ", with: "") else { return }
-        UIPasteboard.general.string = text
 
-        let alert = UIAlertController(title: "Copied", message: "Short URL copied to clipboard.", preferredStyle: .alert)
+    @objc private func copyToClipboard(_ sender: UIButton) {
+        let text: String?
+        let message: String
+
+        switch sender.tag {
+        case 1:
+            text = resultShortLinkLabel.text?.replacingOccurrences(of: "Short URL: ", with: "")
+            message = "Short URL copied to clipboard."
+        case 2:
+            text = resultSecureShortLinkLabel.text?.replacingOccurrences(of: "Secure Short Link: ", with: "")
+            message = "Secure short link copied to clipboard."
+        default:
+            return
+        }
+
+        guard let copiedText = text, !copiedText.isEmpty else { return }
+
+        UIPasteboard.general.string = copiedText
+
+        let alert = UIAlertController(title: "Copied", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
 
     @objc private func createShortLink() {
-        resultLabel.text = nil
-        errorLabel.text = nil
-        copyButton.isHidden = true
-        activityIndicator.startAnimating()
-        loadingLabel.isHidden = false
-        createButton.isEnabled = false
+        resultShortLinkLabel.text = nil
+        errorShortLinkLabel.text = nil
+        copyShortLinkButton.isHidden = true
+        shortLinkActivityIndicator.startAnimating()
+        loadingShortLinkLabel.isHidden = false
+        createShortLinkButton.isEnabled = false
 
-        let parameters: ShortIOParameters
-        do {
-            parameters = try ShortIOParameters(
-                domain: "your_domain",
-                originalURL: "your_original_url"
-            )
-        } catch {
-            activityIndicator.stopAnimating()
-            loadingLabel.isHidden = true
-            createButton.isEnabled = true
-            errorLabel.text = "Invalid input: \(error.localizedDescription)"
-            return
-        }
-
-        let apiKey = "your_api_key"
+        // originalURL is the destination you want shortened, not your Short.io domain.
+        let parameters = ShortIOParameters(
+            originalURL: "https://example.com"
+        )
 
         Task { @MainActor in
             do {
-                let result = try await shortLinkSDK.createShortLink(parameters: parameters, apiKey: apiKey)
+                let result = try await shortLinkSDK.createShortLink(parameters: parameters)
                 switch result {
                 case .success(let response):
-                    resultLabel.text = "Short URL: \(response.shortURL)"
-                    copyButton.isHidden = false
+                    resultShortLinkLabel.text = "Short URL: \(response.shortURL)"
+                    copyShortLinkButton.isHidden = false
                 case .failure(let errorResponse):
-                    errorLabel.text = "Error: \(errorResponse.message)"
+                    errorShortLinkLabel.text = "Error: \(errorResponse.message)"
                 }
             } catch {
-                errorLabel.text = "Error: \(error.localizedDescription)"
+                errorShortLinkLabel.text = "Error: \(error.localizedDescription)"
             }
-            activityIndicator.stopAnimating()
-            loadingLabel.isHidden = true
-            createButton.isEnabled = true
+            shortLinkActivityIndicator.stopAnimating()
+            createShortLinkButton.isEnabled = true
+            loadingShortLinkLabel.isHidden = true
+        }
+    }
+
+    @objc private func createSecureShortLink() {
+        resultSecureShortLinkLabel.text = nil
+        errorSecureShortLinkLabel.text = nil
+        copySecureShortLinkButton.isHidden = true
+        secureLinkActivityIndicator.startAnimating()
+        loadingSecuredShortLinkLabel.isHidden = false
+        createSecureShortLinkButton.isEnabled = false
+
+        Task { @MainActor in
+            do {
+                let secure = try shortLinkSDK.createSecure(originalURL: "https://example.com")
+
+                // The ciphertext is what gets shortened; the key never reaches the server.
+                let parameters = ShortIOParameters(originalURL: secure.securedOriginalURL)
+                switch try await shortLinkSDK.createShortLink(parameters: parameters) {
+                case .success(let response):
+                    // securedShortUrl is the "#<key>" fragment the browser decrypts with.
+                    resultSecureShortLinkLabel.text = "Secure Short Link: \(response.shortURL)\(secure.securedShortUrl)"
+                    copySecureShortLinkButton.isHidden = false
+                case .failure(let errorResponse):
+                    errorSecureShortLinkLabel.text = "Error: \(errorResponse.message)"
+                }
+            } catch {
+                errorSecureShortLinkLabel.text = "Error: \(error.localizedDescription)"
+            }
+            secureLinkActivityIndicator.stopAnimating()
+            createSecureShortLinkButton.isEnabled = true
+            loadingSecuredShortLinkLabel.isHidden = true
+        }
+    }
+
+    @objc private func resolveShortLink() {
+        resultDestinationLabel.text = nil
+        errorDestinationLabel.text = nil
+        incomingLinkField.resignFirstResponder()
+
+        guard let text = incomingLinkField.text, let url = URL(string: text), !text.isEmpty else {
+            errorDestinationLabel.text = "Error: Not a valid URL"
+            return
+        }
+
+        resolveShortLinkButton.isEnabled = false
+
+        Task { @MainActor in
+            do {
+                let components = try await shortLinkSDK.handleOpen(url)
+                resultDestinationLabel.text = "Destination: \(components.url?.absoluteString ?? components.string ?? "unknown")"
+                print("Host: \(components.host ?? "nil")",
+                      "Path: \(components.path)",
+                      "QueryParams: \(components.queryItems ?? [])")
+            } catch {
+                errorDestinationLabel.text = "Error: \(error.localizedDescription)"
+            }
+            resolveShortLinkButton.isEnabled = true
+        }
+    }
+
+    @objc private func conversionTracking() {
+        Task {
+            do {
+                // clid is captured by handleOpen(_:), domain by initialize(apiKey:domain:)
+                let result = try await shortLinkSDK.trackConversion(conversionId: "your_conversion_id")
+                print("result", result)
+            } catch {
+                print("Failed to track conversion: \(error)")
+            }
         }
     }
 }
-

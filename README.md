@@ -1,19 +1,25 @@
 # 📱 ShortIOApp – iOS Sample Project for ShortIOSDK
 
+[![CI](https://github.com/Short-io/ios-sdk-example/actions/workflows/ci.yml/badge.svg)](https://github.com/Short-io/ios-sdk-example/actions/workflows/ci.yml)
+
 **ShortIOApp** is a sample iOS project that demonstrates how to integrate and use the [ShortIOSDK](https://github.com/Short-io/ios-sdk) for generating short links and handling universal deep links using [Short.io](https://short.io/).
 
 This project helps developers understand how to:
 
-- Set up and use `ShortIOSDK`
 - Generate short URLs with customizable parameters
-- Integrate and handle Universal Links in SwiftUI and UIKit
+- Handle deep links via Universal Links
+- Track conversions
+- Use secure (encrypted) short links
 
 ## 📦 Requirements
 
-- iOS 13.0+
-- Xcode 13.0+
-- Swift 5+
-- A valid [Short.io](https://short.io/) account
+- iOS 15.0+ (ShortIOSDK floor; these sample apps target iOS 18.4)
+- Xcode 16.0+
+- Swift 6.0
+- A valid `enterprises` [Short.io](https://short.io/) account
+
+Both sample projects resolve [ShortIOSDK](https://github.com/Short-io/ios-sdk) `2.0.0`
+via Swift Package Manager. No manual setup is needed; Xcode fetches it on first open.
 
 ## 🚀 Getting Started
 
@@ -35,22 +41,39 @@ Open `ShortIOApp.xcodeproj` or `ShortIOApp.xcworkspace` in Xcode, depending on t
 
 ## 🛠 Setup Instructions
 
-### 🔑 1. Add Your API Key
+### Initialize the SDK
 
-Open the appropriate file:
+Before using any functionality, you must initialize the SDK using your API key and domain in `AppDelegate` as part of application(launchOptions) for a UIKit app, or the @main initialization logic for a SwiftUI app.
 
-- **SwiftUI:** `ContentView.swift`
-- **UIKit:** `ViewController.swift`
-Replace the placeholder with your **Short.io Public API Key:**
+Both sample apps ship with `your_public_apiKey` / `yourshortdomain.short.gy` placeholders in
+`AppDelegate.swift`. Replace them with your own before running, or every request returns an
+authentication error. See [Get Public API Key](https://github.com/Short-io/ios-sdk#get-public-api-key-from-shortio).
 
-```bash
-let apiKey = "your_api_key"
+
+
+```swift
+...
+import ShortIOSDK
+...
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  ...
+  func application(...) {
+    ...
+    let sdk = ShortIOSDK.shared
+
+    sdk.initialize(apiKey: "your_apiKey_here", domain: "your_domain_here")
+    ...
+  }
+  ...
+}
 ```
+
+**Note:** Both `apiKey` and `domain` are the required parameters.
 
 🔗 **Need help finding your API key?**
 
 Follow this guide in the [ShortIOSDK README](https://github.com/Short-io/ios-sdk?tab=readme-ov-file#step-1-get-public-api-key-from-shortio).
-
 
 
 ### 🌐 2. Set Short Link Parameters
@@ -71,21 +94,18 @@ The app demonstrates:
 
 ### ✅ Generating Short Links
 
-Using your domain and original URL, you can generate a short link like this:
+With the SDK initialized, you can generate a short link like this:
 
 ```swift
-let sdk = ShortIOSDK()
+let sdk = ShortIOSDK.shared
 
 let parameters = ShortIOParameters(
-    domain: "your_domain",
-    originalURL: "https://yourdomain.com"
+    originalURL: "https://example.com"
 )
-
-let apiKey = "your_api_key"
 
 Task {
     do {
-        let result = try await sdk.createShortLink(parameters: parameters, apiKey: apiKey)
+        let result = try await sdk.createShortLink(parameters: parameters)
         switch result {
             case .success(let response):
                 print("Short URL created: \(response.shortURL)")
@@ -98,7 +118,71 @@ Task {
 }
 ```
 
+**⚠️ Note**: The `apiKey` and `domain` parameters are deprecated. Call `initialize(apiKey:domain:)` first and the instance uses its configured values.
+
+### 🔐 Secure Short Links (Encrypted)
+
+If you want to encrypt the original URL, the SDK provides a `createSecure` function that uses AES-GCM encryption.
+
+#### 🔧 Example
+
+```swift
+let sdk = ShortIOSDK.shared
+
+Task {
+    do {
+        let result = try sdk.createSecure(originalURL: "your_originalURL_here")
+        print("result", result.securedOriginalURL, result.securedShortUrl)
+    } catch {
+        print("Failed to create secure URL: \(error)")
+    }
+}
+```
+#### 🧾 Output Format
+
+- **`securedOriginalURL:`** An encrypted URL like `shortsecure://<Base64EncodedData>?<Base64IV>`
+
+- **`securedShortUrl:`** A Base64-encoded decryption key to be appended as a fragment (e.g. `#<key>`)
+
+### 🔄 Conversion Tracking
+
+Track conversions for your short links to measure campaign effectiveness. The SDK provides a simple method to record conversions.
+
+```swift
+import ShortIOSDK
+
+let sdk = ShortIOSDK.shared
+
+Task {
+    do {
+        let result = try await sdk.trackConversion(
+            conversionId: "your_conversionID" // optional
+        )
+        print("result", result)
+    } catch {
+        print("Failed to track conversion: \(error)")
+    }
+}
+```
+
+**⚠️ Note:** `conversionId` is optional. The `clid` is captured by `handleOpen(_:)` and the
+domain by `initialize(apiKey:domain:)`, so neither needs to be passed.
+
+**Deprecated in 2.0.0.** Use `trackConversion(conversionId:)` instead.
+This overload still works and will be removed in future releases.
+
 ## 🌐 Handling Universal Links
+
+**⚠️ Prerequisite:** Universal Links require the **Associated Domains** capability
+(`applinks:yourshortdomain.short.gy`) and a matching `<TeamID>.<BundleID>` configured under
+**Domain Settings → Deep links** on Short.io. This needs a **paid** Apple Developer
+membership — free personal teams cannot provision Associated Domains. See the
+[SDK README](https://github.com/Short-io/ios-sdk#-deep-linking-setup-universal-links-for-ios)
+for the full setup.
+
+Without that setup the callbacks below never fire. To exercise `handleOpen(_:)` on its own,
+call it directly with a short link — it is a plain HTTPS request and needs no entitlement
+(the SwiftUI sample's **Resolve Short Link** button does exactly this).
 
 ### SwiftUI Implementation
 
@@ -106,8 +190,19 @@ Use the `.onOpenURL` modifier to process incoming links:
 
 ```swift
 .onOpenURL { url in
-    sdk.handleOpen(url) { result in
-        print("Navigated to path: \(result?.path ?? "")")
+    Task {
+        do {
+            let components = try await ShortIOSDK.shared.handleOpen(url)
+            // Handle successful URL processing
+            print(
+                "Original URL: \(components.url?.absoluteString ?? "unknown")",
+                "Host: \(components.host ?? "nil"), Path: \(components.path)",
+                "QueryParams: \(components.queryItems ?? [])"
+            )
+        } catch {
+            // Handle error with proper error type
+            print("Error: \(error.localizedDescription)")
+        }
     }
 }
 ```
@@ -123,11 +218,26 @@ func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
             print("Invalid universal link or URL components")
             return
         }
-        sdk.handleOpen(incomingURL) { result in
-        print("Host: \(result?.host), Path: \(result?.path)")
+    Task {
+        do {
+            let components = try await ShortIOSDK.shared.handleOpen(incomingURL)
+            // Handle successful URL processing
+            print(
+                "Original URL: \(components.url?.absoluteString ?? "unknown")",
+                "Host: \(components.host ?? "nil"), Path: \(components.path)",
+                "QueryParams: \(components.queryItems ?? [])"
+            )
+        } catch {
+            // Handle error with proper error type
+            print("Error: \(error.localizedDescription)")
+        }
     }
 }
 ```
+
+**⚠️ Deprecated in 2.0.0.** Use the `async` form above instead.
+The completion-handler overload `handleOpen(_:completion:)` still works and will be
+removed in future releases.
 
 ## 🤝 Contributing
 

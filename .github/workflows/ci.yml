@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+# Least privilege: nothing here needs more than reading the checkout.
+permissions:
+  contents: read
+
+# A force-push to a PR supersedes the run already in flight; don't pay for both.
+# Pushes to main are exempt — cancelling those leaves a merged commit with no
+# completed run, and the README badge reporting a cancellation.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # This job builds; it does not test. ShortIOAppTests is still the unmodified
+  # Xcode template (a single `example()` with no #expect), and the UI tests are
+  # launch-performance boilerplate, so `xcodebuild test` here would report a
+  # green suite that asserts nothing. What is genuinely worth verifying is that
+  # both sample apps still compile and link against the pinned ShortIOSDK — so
+  # that is what the job is named for and what it does. Fold it into `test`
+  # below once ShortIOAppTests carries real assertions.
+  build:
+    name: build ${{ matrix.project }}
+    runs-on: macos-15
+    # A wedged toolchain otherwise runs to the 360-minute default, billed at the
+    # 10x macOS multiplier, on both matrix legs.
+    timeout-minutes: 20
+    strategy:
+      # Don't cancel the sibling project on first failure — knowing whether both
+      # broke or only one is the useful signal.
+      fail-fast: false
+      matrix:
+        project: [SwiftUIProject, StoryboardProject]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          # Pinned so a newly released Xcode cannot turn CI red on an unchanged
+          # tree. macos-15 currently ships 16.0-16.4 and 26.0-26.3; this and the
+          # runs-on image above are a matched pair, so bump them together.
+          xcode-version: "26.3"
+
+      # Keyed on Package.resolved: the cache is only reusable while the pinned
+      # SDK revision is unchanged, which is exactly when reuse is correct.
+      - name: Cache SwiftPM
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Caches/org.swift.swiftpm
+          key: spm-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      # Resolves ShortIOSDK at the revision committed in Package.resolved, so CI
+      # builds exactly what a developer checking out this branch would build.
+      # Split from the build step so a dependency-resolution failure is not
+      # reported as a compile failure.
+      - name: Resolve package dependencies
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project "$PROJECT/ShortIOApp.xcodeproj" \
+            -scheme ShortIOApp
+
+      # build-for-testing compiles the app and both test bundles (the scheme's
+      # skipped flag governs what *runs*, not what builds), so real tests added
+      # later are compile-checked from day one. The generic/ destination means
+      # no simulator is booted — removing the single flakiest step in an iOS CI
+      # run, and the reason no UDID lookup is needed here.
+      # CODE_SIGNING_ALLOWED=NO: simulator builds need no certificates, which
+      # keeps this working without any signing secrets in the repo.
+      - name: Build
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          xcodebuild build-for-testing \
+            -project "$PROJECT/ShortIOApp.xcodeproj" \
+            -scheme ShortIOApp \
+            -destination 'generic/platform=iOS Simulator' \
+            -resultBundlePath BuildResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      # Only on failure: the .xcresult opens in Xcode and shows the failing
+      # diagnostic directly, instead of leaving only scrollback to read.
+      - name: Upload build results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: build-results-${{ matrix.project }}
+          path: BuildResults.xcresult
+          retention-days: 7
+
+  # The main ruleset requires a check named `test`, which the matrix reports as
+  # `build <project>`. always() so a failed build still reports the check.
+  test:
+    name: test
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: '[ "${{ needs.build.result }}" = "success" ]'

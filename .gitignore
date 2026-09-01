@@ -21,3 +21,6 @@ DerivedData
 *.ipa
 *.xcuserstate
 Pods
+
+# JetBrains IDEs
+.idea/
